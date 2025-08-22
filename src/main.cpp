@@ -3,7 +3,7 @@
 #include "math.h"
 #include "stdio.h"
 #include <string.h>
-#define Radian M_PI*180
+#define Radian M_PI/180
 BufferedSerial pc(USBTX, USBRX, 115200);
 
 int main(){
