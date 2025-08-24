@@ -12,8 +12,8 @@ int main(){
     CANMessage msg;// 変数「msg」の作成
 
     /*変数、配列の宣言*/
-    int i;
-    float JoyStickX,JoyStickY,power;
+    int i,JoyStickX,JoyStickY;
+    float power;
     char buf[64];
     char *token;
     float n[4] {0,90*Radian,90*Radian,0};
@@ -33,9 +33,9 @@ int main(){
                 if(buf[0] != 'L' && buf[0] != 'R'){
                     char *str = buf;
                     token = strtok(str,",");//,で区切る
-                    JoyStickX = atof(token)-atof(token)/2;
+                    JoyStickX = atoi(token);
                     token = strtok(NULL,",");
-                    JoyStickY = atof(token)-atof(token)/2;
+                    JoyStickY = atoi(token);
                 }
             }
         }
