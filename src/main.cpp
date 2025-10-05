@@ -36,10 +36,13 @@ int main(){
                 }
             }
         }
+
         // ジョイスティックの倒した強さと角度を計算
         power = sqrt(pow(JoystickX,2.0)+pow(JoystickY,2.0));
         float Joystickdir = atan2(JoystickX,JoystickY);
         if(Joystickdir < 0) Joystickdir += 360.0f * Radian;
+        if(JoystickX < 20 && JoystickX > -20 && JoystickY < 20 && JoystickY > -20) power = 0; //デッドゾーンの作成
+
         // オムニのそれぞれの比率を計算、または旋回
         if(turn != 0){
             for(int i = 0; i < 4; i++){
@@ -47,7 +50,7 @@ int main(){
             }
         }else {
             for(int i = 0; i < 4; i++){
-                wheel[i] = min((int)sin(Joystickdir-wheel_angle[i]*Radian),motor_max_val);
+                wheel[i] = min((int)sin(Joystickdir-wheel_angle[i]*Radian)*power*100,motor_max_val);
             }
         }
         
