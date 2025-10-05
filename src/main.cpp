@@ -14,25 +14,36 @@ int main(){
     CAN can(PA_11, PA_12, (int)1e6); //canを出力するピンを指定
     CANMessage msg; //変数「msg」の作成
     
+    char buf_index;
     while(1){
         if(esp.readable()){
-            int n = esp.read(buf, sizeof(buf) - 1);
-            if(n > 0){
-                buf[n] = '\0';
-                if(buf[n-1] == '|') buf[n-1] = '\0';
-                if(buf == "R"){
-                    turn = 1;
-                } else if(buf == "L"){
-                    turn = -1;
+            char c;
+            int len = esp.read(&c,1);
+            if(len > 0){
+                if(c == '\n'){
+                    if(buf_index > 0){
+                        buf[buf_index] = '\0';
+                        buf_index = 0;
+
+                        if(buf == "R"){
+                            turn = 1;
+                        } else if(buf == "L"){
+                            turn = -1;
+                        } else{
+                            turn = 0;
+                        }
+                        if(buf != "R",buf != "L"){
+                            char *str = buf; //bufの中身をstrに保存
+                            token = strtok(str,","); //","で区切る
+                            JoystickX = atoi(token); //文字列を数値に変換
+                            token = strtok(NULL,","); //","で区切る
+                            JoystickY = atoi(token); //文字列を数値に変換
+                        }
+                    }
                 } else{
-                    turn = 0;
-                }
-                if(buf != "R",buf != "L"){
-                    char *str = buf; //bufの中身をstrに保存
-                    token = strtok(str,","); //","で区切る
-                    JoystickX = atoi(token); //文字列を数値に変換
-                    token = strtok(NULL,","); //","で区切る
-                    JoystickY = atoi(token); //文字列を数値に変換
+                    if(buf_index < sizeof(buf - 1)){
+                        buf[buf_index++] = c;
+                    }
                 }
             }
         }
